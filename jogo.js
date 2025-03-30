@@ -93,7 +93,7 @@ function spawnObstacle() {
         const fireHeight = fireSizeFactor[Math.floor(Math.random() * fireSizeFactor.length)];
         const fireObstacle = {
             x: canvas.width,
-            y: canvas.height - 70, // Fogo gerado um pouco mais alto para que caibam na área jogável
+            y: canvas.height - 90, // Fogo gerado um pouco mais alto para que caibam na área jogável
             width: fireImage.width * fireHeight, // Tamanho ajustado
             height: fireImage.height * fireHeight, // Tamanho ajustado
             image: fireImage
