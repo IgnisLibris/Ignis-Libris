@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ignis Libris</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        /* Título */
+        #gameTitle {
+            font-size: 40px;
+            font-family: 'Times New Roman', serif;
+            color: red;
+            margin-top: 20px;
+        }
+
+        /* Área do jogo com moldura vermelha */
+        #gameArea {
+            position: relative;
+            width: 936px;
+            height: 230px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            border: 2px solid red; /* Moldura vermelha */
+            margin-top: 20px; /* Aproximado do título */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        canvas {
+            background-color: #e0e0e0;
+        }
+
+        /* Tela de Fim de Jogo */
+        #gameOverScreen {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%; /* Aumentado */
+            height: 50%; /* Aumentado */
+            background-color: red;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-family: 'Times New Roman', serif;
+            border-radius: 10px;
+        }
+
+        #gameOverScreen button {
+            font-family: 'Times New Roman', serif;
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: white;
+            color: red;
+            border: 2px solid red;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #gameOverScreen button:hover {
+            background-color: red;
+            color: white;
+        }
+
+        /* Placar dentro da área do jogo */
+        #scoreBoard {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(128, 128, 128, 0.7); /* Caixa cinza semi-transparente */
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: black;
+            font-size: 18px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        /* Para garantir que a área de jogo seja centralizada e o conteúdo não se sobreponha */
+        #contentWrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="contentWrapper">
+        <div id="gameTitle">Ignis Libris</div> <!-- Título do Jogo -->
+
+        <div id="gameArea">
+            <canvas id="gameCanvas"></canvas>
+            <!-- Tela de fim de jogo -->
+            <div id="gameOverScreen">
+                <h1>Burn, baby, burn!</h1>
+                <p id="finalScore"></p>
+                <button onclick="window.location.reload();">Jogar Novamente</button>
+            </div>
+            <!-- Placar dentro da área do jogo -->
+            <div id="scoreBoard">
+                <span id="score">Pontos: 0</span><br>
+                <span id="record">Recorde: 0</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="jogo.js"></script>
+</body>
+</html>
+
+
+
+
+
+
