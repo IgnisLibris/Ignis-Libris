@@ -115,9 +115,55 @@
         </div>
     </div>
 
+    <!-- Inclusão do script que detecta o dispositivo -->
+    <script>
+        // Detectar se o dispositivo é mobile
+        function isMobile() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
+
+        // Ajustar a área de jogo com base no dispositivo
+        function adjustGameArea() {
+            const gameArea = document.getElementById("gameArea");
+            const canvas = document.getElementById("gameCanvas");
+
+            if (isMobile()) {
+                // Se for mobile, ajustar tamanho da área de jogo
+                gameArea.style.width = '90vw';  // 90% da largura da tela
+                gameArea.style.height = '50vh'; // 50% da altura da tela
+
+                // Ajustar o canvas para o tamanho da área de jogo
+                canvas.width = window.innerWidth * 0.9;
+                canvas.height = window.innerHeight * 0.5;
+
+                // Ajustar a posição do placar
+                document.getElementById("scoreBoard").style.position = 'absolute';
+                document.getElementById("scoreBoard").style.top = '10px';
+                document.getElementById("scoreBoard").style.right = '10px';
+            } else {
+                // Se for desktop, manter tamanho fixo
+                gameArea.style.width = '936px';
+                gameArea.style.height = '230px';
+                canvas.width = 936;
+                canvas.height = 230;
+
+                // Ajustar o placar para desktop
+                document.getElementById("scoreBoard").style.position = 'absolute';
+                document.getElementById("scoreBoard").style.top = '20px';
+                document.getElementById("scoreBoard").style.right = '50px';
+            }
+        }
+
+        // Chamar a função ao carregar a página e ao redimensionar a janela
+        window.addEventListener("load", adjustGameArea);
+        window.addEventListener("resize", adjustGameArea);
+    </script>
+
+    <!-- Seu script do jogo -->
     <script src="jogo.js"></script>
 </body>
 </html>
+
 
 
 
