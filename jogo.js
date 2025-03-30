@@ -1,56 +1,33 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// Ajustar o tamanho do canvas com base nas dimensões da área de jogo
+// Ajuste do tamanho do canvas para a área de jogo fixada em 936x230px
 const gameArea = document.getElementById("gameArea");
 
-// Variáveis de controle de jogo
-let canvasWidth = 936;
-let canvasHeight = 230;
+// Definindo o tamanho fixo para o canvas
+const canvasWidth = 936;
+const canvasHeight = 230;
 
-// Função para ajustar o tamanho do canvas dependendo do dispositivo
-function adjustCanvasSize() {
-    if (isMobile()) {
-        // Se for dispositivo móvel, pegar o tamanho dinâmico da área
-        canvasWidth = window.innerWidth * 0.9; // 90% da largura da tela
-        canvasHeight = window.innerHeight * 0.5; // 50% da altura da tela
-    } else {
-        // Para desktop, manter o tamanho fixo
-        canvasWidth = 936;
-        canvasHeight = 230;
-    }
-    // Atualizar as dimensões do canvas
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+canvas.width = canvasWidth;
+canvas.height = canvasHeight;
 
-    // Atualizar a área de jogo
-    gameArea.style.width = `${canvasWidth + 2}px`;
-    gameArea.style.height = `${canvasHeight + 2}px`;
-}
+gameArea.style.width = `${canvasWidth + 2}px`; // Largura da área com a moldura
+gameArea.style.height = `${canvasHeight + 2}px`; // Altura da área com a moldura
+gameArea.style.padding = "0"; // Sem padding adicional
+gameArea.style.border = "2px solid red"; // Moldura vermelha de 2px
 
-// Chama a função de ajuste do canvas ao carregar a página e ao redimensionar a janela
-window.addEventListener("load", adjustCanvasSize);
-window.addEventListener("resize", adjustCanvasSize);
-
-// Função para detectar dispositivos móveis
-function isMobile() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-}
-
-// Player
 const player = {
     x: 50,
-    y: canvas.height - 80,
+    y: canvas.height - 80, // Ajustado para aumentar o espaço para o personagem
     width: 50,
     height: 50,
     speed: 5,
     isJumping: false,
     velocityY: 0,
     gravity: 0.6,
-    jumpHeight: -12
+    jumpHeight: -12 // Aumento da altura do pulo
 };
 
-// Obstáculos
 const obstacles = [];
 const initialObstacleSpeed = 6;
 let obstacleSpeed = initialObstacleSpeed;
@@ -60,23 +37,22 @@ let score = 0;
 let gameOver = false;
 let spawnTime = 0;
 
-// Imagens
 const playerImage = new Image();
-playerImage.src = "player.png";
+playerImage.src = "player.png"; // Certifique-se de que a imagem do jogador esteja na pasta correta
 
 const fireImage = new Image();
-fireImage.src = "fire.png";
+fireImage.src = "fire.png"; // Certifique-se de que a imagem do fogo esteja na pasta correta
 
 const bookImage = new Image();
-bookImage.src = "books.png";
+bookImage.src = "books.png"; // Certifique-se de que a imagem dos livros esteja na pasta correta
 
-let backgroundClass = Math.random() < 0.05 ? 'forest' : 'city';
+let backgroundClass = Math.random() < 0.05 ? 'forest' : 'city'; // 5% chance de ser floresta
 
 // Função de pulo
 function jump() {
     if (!player.isJumping) {
         player.isJumping = true;
-        player.velocityY = player.jumpHeight;
+        player.velocityY = player.jumpHeight; // Ajustando a força do pulo
     }
 }
 
@@ -92,80 +68,92 @@ canvas.addEventListener("touchstart", () => {
 
 // Gerar obstáculos
 function spawnObstacle() {
-    const isFire = Math.random() < 0.35;
-    const isBook = !isFire;
-    const fireSizeFactor = [1, 1.5]; // Fogo com 100% ou 150% do tamanho
+    if (Math.random() < 0.3) { // Menor chance de gerar obstáculos para reduzir a carga no jogo
+        return;
+    }
+
+    const isFire = Math.random() < 0.35; // 35% chance de gerar fogo
+    const isBook = !isFire;  // O restante será livro
+    const fireSizeFactor = [1, 1.5]; // Tamanhos do fogo: 100% e 150% do tamanho original
 
     // Gerar livros (moeda)
     if (isBook) {
         const bookObstacle = {
             x: canvas.width,
-            y: Math.random() * (canvas.height - 200) + 100,
-            width: bookImage.width * 0.6,
-            height: bookImage.height * 0.6,
+            y: Math.random() * (canvas.height - 200) + 100, // Livros gerados mais altos para forçar o pulo
+            width: bookImage.width * 0.6,  // Tamanho aumentado
+            height: bookImage.height * 0.6,  // Tamanho aumentado
             image: bookImage
         };
         obstacles.push(bookObstacle);
     }
 
-    // Gerar fogo
+    // Gerar apenas um fogo
     if (isFire) {
         const fireHeight = fireSizeFactor[Math.floor(Math.random() * fireSizeFactor.length)];
         const fireObstacle = {
             x: canvas.width,
-            y: canvas.height - 70,
-            width: fireImage.width * fireHeight,
-            height: fireImage.height * fireHeight,
+            y: canvas.height - 70, // Fogo gerado um pouco mais alto para que caibam na área jogável
+            width: fireImage.width * fireHeight, // Tamanho ajustado
+            height: fireImage.height * fireHeight, // Tamanho ajustado
             image: fireImage
         };
         obstacles.push(fireObstacle);
     }
 }
 
-// Controlar o intervalo de geração de obstáculos
+// Controla o intervalo de geração sem pausar o jogo
 function manageSpawning() {
     if (!gameOver) {
-        spawnObstacle();
-        setTimeout(manageSpawning, spawnInterval);
+        spawnObstacle(); // Gera o próximo obstáculo
+        setTimeout(manageSpawning, spawnInterval); // Chamando a função novamente após o intervalo
     }
 }
 
-// Aumentar a dificuldade com o tempo
+// Aumentar a frequência dos obstáculos a cada 30 segundos
 function increaseDifficulty() {
     spawnTime += 1;
-    if (spawnTime % 30 === 0) {
-        spawnInterval = Math.max(800, spawnInterval - 50);
-        obstacleSpeed += 0.1;
+    if (spawnTime % 30 === 0) { // A cada 30 segundos
+        spawnInterval = Math.max(800, spawnInterval - 50); // Intervalo não vai abaixo de 800ms
+        obstacleSpeed += 0.1; // Aumento mais suave na velocidade
     }
 }
 
-setTimeout(manageSpawning, spawnInterval);
-setInterval(increaseDifficulty, 1000);
+setTimeout(manageSpawning, spawnInterval); // Inicia a geração de obstáculos
+setInterval(increaseDifficulty, 1000); // Verifica a cada segundo a dificuldade
 
-// Atualizar o jogo
+// Atualizar jogo
 function update() {
     if (gameOver) return;
 
-    score = Math.floor(score);
-    score += 1 / 60;
+    // Atualiza a pontuação
+    score = Math.floor(score); // Pontuação inteira
+    score += 1 / 60;  // Incrementa 1 ponto a cada segundo (dividido por 60 para ficar mais suave)
+
+    // Atualiza o display da pontuação no HTML
     document.getElementById('score').innerText = `Pontos: ${Math.floor(score)}`;
 
+    // Atualiza o recorde
     if (score > localStorage.getItem('highscore')) {
-        localStorage.setItem('highscore', Math.floor(score));
+        localStorage.setItem('highscore', Math.floor(score)); // Armazena o recorde no localStorage
     }
     document.getElementById('record').innerText = `Recorde: ${localStorage.getItem('highscore')}`;
 
+    // Aplica a gravidade ao jogador
     player.y += player.velocityY;
     player.velocityY += player.gravity;
 
+    // Limitar o jogador ao chão
     if (player.y >= canvas.height - player.height) {
         player.y = canvas.height - player.height;
         player.isJumping = false;
     }
 
+    // Atualizar obstáculos
     for (let i = obstacles.length - 1; i >= 0; i--) {
-        obstacles[i].x -= obstacleSpeed;
+        obstacles[i].x -= obstacleSpeed; // Move os obstáculos para a esquerda
 
+        // Verifica se o jogador coletou um livro
         if (obstacles[i].image === bookImage) {
             if (
                 player.x < obstacles[i].x + obstacles[i].width &&
@@ -173,11 +161,12 @@ function update() {
                 player.y < obstacles[i].y + obstacles[i].height &&
                 player.y + player.height > obstacles[i].y
             ) {
-                obstacles.splice(i, 1);
-                score += 1;
+                obstacles.splice(i, 1); // Remove o livro coletado
+                score += 1; // Incrementa a pontuação ao coletar um livro
             }
         }
 
+        // Verifica colisão com o fogo
         if (obstacles[i].image === fireImage) {
             if (
                 player.x < obstacles[i].x + obstacles[i].width &&
@@ -185,10 +174,11 @@ function update() {
                 player.y < obstacles[i].y + obstacles[i].height &&
                 player.y + player.height > obstacles[i].y
             ) {
-                endGame();
+                endGame(); // Fim do jogo em caso de colisão com o fogo
             }
         }
 
+        // Remove obstáculos fora da tela
         if (obstacles[i].x + obstacles[i].width < 0) {
             obstacles.splice(i, 1);
         }
@@ -197,43 +187,51 @@ function update() {
 
 // Exibe a tela de fim de jogo
 function endGame() {
-    gameOver = true;
-    document.getElementById("gameOverScreen").style.display = "block";
-    document.getElementById("finalScore").innerText = `Livros coletados: ${Math.floor(score)}`;
+    gameOver = true; // Define que o jogo terminou
+    document.getElementById("gameOverScreen").style.display = "block"; // Exibe a tela de Game Over
+    document.getElementById("finalScore").innerText = `Livros coletados: ${Math.floor(score)}`; // Exibe a quantidade de livros coletados
 }
 
-// Desenhar o fundo
+// Desenhar fundo
 function drawBackground() {
-    const cityImage = new Image();
-    const forestImage = new Image();
-
     if (backgroundClass === 'city') {
-        cityImage.src = 'city_background.png';
+        const cityImage = new Image();
+        cityImage.src = 'city_background.png'; // Certifique-se de que a imagem do fundo da cidade esteja na pasta correta
         ctx.drawImage(cityImage, 0, 0, canvas.width, canvas.height);
     } else {
-        forestImage.src = 'forest_background.png';
+        const forestImage = new Image();
+        forestImage.src = 'forest_background.png'; // Certifique-se de que a imagem do fundo da floresta esteja na pasta correta
         ctx.drawImage(forestImage, 0, 0, canvas.width, canvas.height);
     }
 }
 
-// Renderizar o jogo
+// Renderizar jogo
 function draw() {
-    drawBackground();
+    drawBackground(); // Desenha o fundo
     ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
 
+    // Desenha os obstáculos
     for (let i = 0; i < obstacles.length; i++) {
         ctx.drawImage(obstacles[i].image, obstacles[i].x, obstacles[i].y, obstacles[i].width, obstacles[i].height);
     }
 }
 
-// Loop principal do jogo
+// Limitar a taxa de atualização do game loop
 function gameLoop() {
-    update();
-    draw();
-    if (!gameOver) requestAnimationFrame(gameLoop);
+    const frameRate = 60; // 60 quadros por segundo
+    const interval = 1000 / frameRate;
+    let lastTime = 0;
+
+    function loop(currentTime) {
+        if (currentTime - lastTime >= interval) {
+            update();
+            draw();
+            lastTime = currentTime;
+        }
+        if (!gameOver) requestAnimationFrame(loop);
+    }
+
+    requestAnimationFrame(loop);
 }
 
-gameLoop();
-
-
-
+gameLoop(); // Inicia o loop do jogo
