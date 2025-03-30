@@ -1,4 +1,4 @@
-/* Estilo do corpo */
+/* Reset básico */
 body {
     margin: 0;
     overflow: hidden;
@@ -6,133 +6,72 @@ body {
     background: white;
 }
 
-/* Estilo do contêiner do jogo */
+/* Contêiner do jogo */
 #game-container {
     position: relative;
-    width: 70vw;  /* 70% da largura da tela */
-    height: 30vh; /* 30% da altura da tela */
-    max-width: 936px;  /* Limite de largura */
-    max-height: 230px; /* Limite de altura */
+    width: 90vw;
+    height: 40vh;
+    max-width: 936px;
+    max-height: 230px;
     margin: 5vh auto;
     border: 2px solid red;
     box-sizing: border-box;
 }
 
-/* Estilo do canvas */
+/* Canvas ajustável */
 #gameCanvas {
     display: block;
     width: 100%;
     height: 100%;
+    touch-action: manipulation; /* Impede zoom acidental em toques */
 }
 
-/* Estilo da pontuação */
-#score {
+/* Pontuação */
+#score, #record {
     position: absolute;
     top: 10px;
-    left: 10px;  /* Ajustado para a esquerda */
-    font-size: 14px;
-    font-family: "Times New Roman", serif;
+    font-size: 16px;
     color: black;
-    text-shadow: none;
 }
 
-/* Estilo do recorde */
-#record {
-    position: absolute;
-    top: 10px;
-    right: 10px;  /* Ajustado para a direita */
-    font-size: 14px;
-    font-family: "Times New Roman", serif;
-    color: black;
-    text-shadow: none;
-}
+#score { left: 10px; }
+#record { right: 10px; }
 
-/* Estilo do fundo - animações de fundo */
-.city {
-    background: url('city_background.png') repeat-x center/cover;
-    animation: moveBackground 20s linear infinite;
-}
-
-.forest {
-    background: url('forest_background.png') repeat-x center/cover;
-    animation: moveBackground 25s linear infinite;
-}
-
-/* Animação para o fundo se mover */
-@keyframes moveBackground {
-    from { background-position: 0 0; }
-    to { background-position: -10000px 0; }
-}
-
-/* Estilo da caixa de fim de jogo */
+/* Tela de fim de jogo */
 #gameOverScreen {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(255, 0, 0, 0.8); /* Caixa vermelha semitransparente */
+    background-color: rgba(255, 0, 0, 0.8);
     color: white;
-    font-family: "Times New Roman", serif;
     font-size: 32px;
-    display: none;  /* Inicialmente invisível */
+    display: none;
     text-align: center;
-    padding-top: 200px; /* Centraliza a mensagem na tela */
-    z-index: 10;
-    animation: slideIn 1s ease-out;
+    padding-top: 20%;
 }
 
-/* Animação para a caixa de fim de jogo aparecer de cima para baixo */
-@keyframes slideIn {
-    from {
-        top: -100vh; /* Começa fora da tela */
-    }
-    to {
-        top: 0; /* Termina no topo da tela */
-    }
-}
-
-/* Estilo para a mensagem "Burn, baby, burn!" */
-#gameOverScreen h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
-}
-
-/* Estilo do botão de reinício */
 #restartButton {
     font-size: 20px;
     padding: 10px 20px;
     background-color: white;
     border: none;
-    border-radius: 5px;
-    color: black;
     cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s;
 }
 
-/* Estilo do botão de reinício ao passar o mouse */
 #restartButton:hover {
     background-color: lightgray;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
-    /* Para dispositivos móveis, ajuste de tamanhos */
     #game-container {
-        width: 90vw;
-        height: 40vh;
+        width: 95vw;
+        height: 50vh;
     }
-
+    
     #score, #record {
-        font-size: 12px;  /* Reduzir o tamanho da fonte para dispositivos móveis */
-    }
-
-    #gameOverScreen {
-        font-size: 24px; /* Reduzir o tamanho da fonte na tela de fim de jogo */
-    }
-
-    #restartButton {
-        font-size: 18px;  /* Reduzir o tamanho do botão */
+        font-size: 14px;
     }
 }
