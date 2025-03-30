@@ -11,6 +11,8 @@ body {
     position: relative;
     width: 70vw;  /* 70% da largura da tela */
     height: 30vh; /* 30% da altura da tela */
+    max-width: 936px;  /* Limite de largura */
+    max-height: 230px; /* Limite de altura */
     margin: 5vh auto;
     border: 2px solid red;
     box-sizing: border-box;
@@ -26,9 +28,8 @@ body {
 /* Estilo da pontuação */
 #score {
     position: absolute;
-    top: -20px;
-    right: 15%;
-    transform: translateX(50%);
+    top: 10px;
+    left: 10px;  /* Ajustado para a esquerda */
     font-size: 14px;
     font-family: "Times New Roman", serif;
     color: black;
@@ -38,8 +39,8 @@ body {
 /* Estilo do recorde */
 #record {
     position: absolute;
-    top: -20px;
-    right: 1%;
+    top: 10px;
+    right: 10px;  /* Ajustado para a direita */
     font-size: 14px;
     font-family: "Times New Roman", serif;
     color: black;
@@ -113,4 +114,25 @@ body {
 /* Estilo do botão de reinício ao passar o mouse */
 #restartButton:hover {
     background-color: lightgray;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    /* Para dispositivos móveis, ajuste de tamanhos */
+    #game-container {
+        width: 90vw;
+        height: 40vh;
+    }
+
+    #score, #record {
+        font-size: 12px;  /* Reduzir o tamanho da fonte para dispositivos móveis */
+    }
+
+    #gameOverScreen {
+        font-size: 24px; /* Reduzir o tamanho da fonte na tela de fim de jogo */
+    }
+
+    #restartButton {
+        font-size: 18px;  /* Reduzir o tamanho do botão */
+    }
 }
